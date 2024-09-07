@@ -17,6 +17,7 @@ const SignUp = () => {
     password: '',
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
   const dispatch = useDispatch();
   const Navigate = useNavigate();
 
@@ -34,12 +35,16 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await dispatch(registerUser(formData));
+      setError('');
+      await dispatch(registerUser(formData)).unwrap();
       Navigate('/login');
     } catch (error) {
-      return error;
+      // Set the error state and log it
+      setError(error.error || 'An error occurred ');
+      console.log('Login failed:', error);
     }
   };
+
   return (
     <div className="min-h-screen mt-20">
       <div className="flex p-3 max-w-5xl mx-auto flex-col md:flex-row md:items-start">
@@ -134,6 +139,10 @@ const SignUp = () => {
                 )}
               </span>
             </div>
+
+            {error && (
+              <p className="text-red-500 text-sm mb-4">{error}</p> // Error message
+            )}
 
             <Button
               type="submit"

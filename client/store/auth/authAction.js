@@ -21,14 +21,14 @@ export const registerUser = createAsyncThunk(
 
       return response.data;
     } catch (error) {
+      console.log(error);
       return rejectWithValue({
-        error: error.response.data
-          ? error.response.data.message
-          : error.message,
+        error: error.response.data ? error.response.data.error : error.response,
       });
     }
   }
 );
+
 export const loginUser = createAsyncThunk(
   'user/login',
   async ({ adharCardNumber, password }, { rejectWithValue }) => {
@@ -41,9 +41,7 @@ export const loginUser = createAsyncThunk(
       return response.data;
     } catch (error) {
       return rejectWithValue({
-        error: error.response.data
-          ? error.response.data.message
-          : error.message,
+        error: error.response.data ? error.response.data.error : error.response,
       });
     }
   }

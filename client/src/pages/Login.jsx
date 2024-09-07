@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { TextInput, Button } from 'flowbite-react';
 import { useState } from 'react';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
@@ -9,11 +9,12 @@ import { loginUser } from '../../store/auth/authAction';
 const Login = () => {
   const [formData, setFormData] = useState({
     adharCardNumber: '',
-
     password: '',
   });
+  const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -26,14 +27,26 @@ const Login = () => {
     }));
   };
 
+  // After login, store the token
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await dispatch(loginUser(formData));
+      setError('');
+      const resultAction = await dispatch(loginUser(formData));
+
+      if (loginUser.fulfilled.match(resultAction)) {
+        const { token } = resultAction.payload;
+        localStorage.setItem('token', token); // Store token
+        navigate('/'); // Navigate to home page
+      } else {
+        setError(resultAction.payload.error || 'Login failed');
+      }
     } catch (error) {
-      return error;
+      setError('An unexpected error occurred');
+      console.error('Login failed:', error);
     }
   };
+
   return (
     <div className="min-h-screen mt-20">
       <div className="flex p-3 max-w-5xl mx-auto flex-col md:flex-row md:items-start">
@@ -82,6 +95,9 @@ const Login = () => {
                 )}
               </span>
             </div>
+            {error && (
+              <p className="text-red-500 text-sm mb-4">{error}</p> // Error message
+            )}
 
             <Button
               type="submit"
