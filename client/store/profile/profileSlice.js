@@ -2,16 +2,22 @@ import { createSlice } from '@reduxjs/toolkit';
 import { candidates, userProfile } from './profileAuth';
 
 const initialState = {
-  profile: null, // Holds user profile data
-  candidates: [], // Holds candidate data
-  loading: false, // Tracks if the request is ongoing
-  error: null, // Stores any error message
+  profile: null,
+  candidates: [],
+  loading: false,
+  error: null,
 };
 
 const profileSlice = createSlice({
   name: 'profile',
   initialState,
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      state.profile = null;
+      state.candidates = [];
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(userProfile.pending, (state) => {
@@ -41,4 +47,5 @@ const profileSlice = createSlice({
   },
 });
 
+export const { logout } = profileSlice.actions;
 export default profileSlice.reducer;

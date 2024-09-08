@@ -3,8 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { TextInput, Button } from 'flowbite-react';
 import { useState } from 'react';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../../store/auth/authAction';
+import { userProfile } from '../../store/profile/profileAuth';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -15,6 +16,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { profile } = useSelector((state) => state.profile);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -36,8 +38,11 @@ const Login = () => {
 
       if (loginUser.fulfilled.match(resultAction)) {
         const { token } = resultAction.payload;
-        localStorage.setItem('token', token); // Store token
-        navigate('/'); // Navigate to home page
+        localStorage.setItem('token', token);
+        await dispatch(userProfile());
+        if (profile) {
+          navigate('/');
+        }
       } else {
         setError(resultAction.payload.error || 'Login failed');
       }

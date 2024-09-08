@@ -8,20 +8,24 @@ import Result from './pages/Result';
 import SignUp from './pages/Sign-up';
 import Vote from './pages/Vote';
 import CandidateList from './pages/CandidateList';
-// import PrivateRoute from './components/PrivateRoute';
+import PrivateRoute from './components/PrivateRoute';
 export default function App() {
   return (
     <BrowserRouter>
       <Header />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/candidateList" element={<CandidateList />} />
-
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/result" element={<Result />} />
+        {/* public Routes  */}
         <Route path="/login" element={<Login />} />
         <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/vote" element={<Vote />} />
+
+        {/* Private Routes  */}
+        <Route path="/" element={<PrivateRoute />}>
+          <Route path="" element={<Home />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="candidateList" element={<CandidateList />} />
+          <Route path="vote" element={<Vote />} />
+          <Route path="result" element={<Result />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

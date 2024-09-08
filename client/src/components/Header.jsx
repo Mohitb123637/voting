@@ -4,8 +4,10 @@ import { CiSearch } from 'react-icons/ci';
 import { MdOutlineDarkMode } from 'react-icons/md';
 import { useSelector, useDispatch } from 'react-redux';
 import { logoutUser } from '../../store/auth/authAction';
+import { logout } from '../../store/profile/profileSlice';
 import { useState } from 'react';
 import LogOutModal from './LogoutModel';
+import NavbarLink from './NavbarLinks';
 
 const Header = () => {
   const { profile } = useSelector((state) => state.profile);
@@ -13,10 +15,12 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isModelOpen, setModelOpen] = useState(false);
+
   const handleLogout = async () => {
     try {
       await dispatch(logoutUser());
       localStorage.removeItem('token');
+      dispatch(logout());
       setModelOpen(false);
       navigate('/login');
     } catch (error) {
@@ -76,8 +80,8 @@ const Header = () => {
         <Navbar.Toggle />
       </div>
       <Navbar.Collapse>
-        <Navbar.Link
-          href="/"
+        <NavbarLink
+          to="/"
           className={
             path === '/'
               ? 'text-indigo-600 dark:text-indigo-400'
@@ -85,10 +89,10 @@ const Header = () => {
           }
         >
           Home
-        </Navbar.Link>
+        </NavbarLink>
 
-        <Navbar.Link
-          href="/candidateList"
+        <NavbarLink
+          to="/candidateList"
           className={
             path === '/candidateList'
               ? 'text-indigo-600 dark:text-indigo-400'
@@ -96,11 +100,11 @@ const Header = () => {
           }
         >
           List of Candidates
-        </Navbar.Link>
+        </NavbarLink>
         {profile?.user.role === 'admin' ? (
           <>
-            <Navbar.Link
-              href="/dashboard"
+            <NavbarLink
+              to="/dashboard"
               className={
                 path === '/dashboard'
                   ? 'text-indigo-600 dark:text-indigo-400'
@@ -108,7 +112,7 @@ const Header = () => {
               }
             >
               Dashboard
-            </Navbar.Link>
+            </NavbarLink>
           </>
         ) : null}
       </Navbar.Collapse>
