@@ -23,7 +23,7 @@ const Modal = ({ isOpen, onClose, onConfirm, candidate }) => {
         </h2>
         <div className="flex items-center mb-6">
           <img
-            src={candidate ? candidate.image : fallbackImage}
+            src={candidate ? candidate.profileImage : fallbackImage}
             alt={candidate ? candidate.name : 'Candidate'}
             className="w-28 h-28 object-cover rounded-full border-4 border-blue-800 mr-6"
           />

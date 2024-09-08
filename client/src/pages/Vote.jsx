@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { candidates } from '../../store/profile/profileAuth';
 import Modal from '../components/Model';
 import { vote } from '../../store/candidate/candidateAction';
+import BackButton from '../components/BackButton';
 
 const Vote = () => {
   const dispatch = useDispatch();
@@ -35,30 +36,20 @@ const Vote = () => {
     );
   }
 
-  // Images for each candidate
-  const profileImages = {
-    '66d8614ce028e3c4d74b8f22':
-      'https://www.pmindia.gov.in/wp-content/uploads/2022/12/twitter_3.jpg',
-    '66d863cbad0bfff90bf59c79':
-      'https://indianexpress.com/wp-content/uploads/2023/10/Rahul-gandhi-profile-800.jpg',
-    '66d86417ad0bfff90bf59c7c':
-      'https://images.assettype.com/outlookindia/2024-04/9f8a5b21-b673-4591-93ea-8432de8466f9/Akhilesh_Yadav_CMO.jpg',
-  };
-
   const handleVoteClick = (candidate) => {
     setSelectedCandidate({
       ...candidate,
-      image: profileImages[candidate._id] || '/default-image.png',
     });
     setShowModal(true);
   };
 
   const handleConfirmVote = () => {
     if (selectedCandidate) {
-      console.log(selectedCandidate._id, 'ja');
       dispatch(vote({ candidateID: selectedCandidate._id }));
     }
     setShowModal(false);
+    alert('Thank you for Voting');
+    navigate('/');
   };
 
   const handleCloseModal = () => {
@@ -81,7 +72,7 @@ const Vote = () => {
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-200 via-blue-300 to-blue-400 opacity-30 rounded-xl z-0"></div>
                 <div className="relative flex flex-col items-center mb-6 z-10">
                   <img
-                    src={profileImages[candidate._id] || '/default-image.png'}
+                    src={candidate.profileImage}
                     alt={candidate.name}
                     className="w-48 h-48 object-cover rounded-full border-4 border-blue-800 shadow-xl"
                   />
@@ -98,12 +89,6 @@ const Vote = () => {
                     <p className="text-gray-800 mb-1">
                       <span className="font-semibold text-blue-700">Age:</span>{' '}
                       {candidate.age}
-                    </p>
-                    <p className="text-gray-800">
-                      <span className="font-semibold text-blue-700">
-                        Votes:
-                      </span>{' '}
-                      {candidate.voteCount}
                     </p>
                   </div>
                 </div>
@@ -128,6 +113,7 @@ const Vote = () => {
           candidate={selectedCandidate}
         />
       </div>
+      <BackButton />
     </div>
   );
 };

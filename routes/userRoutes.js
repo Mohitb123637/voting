@@ -45,7 +45,7 @@ router.post('/login', async (req, res) => {
       id: user.id,
     };
     const token = generateToken(payload);
-    res.json({ token: token });
+    res.json({ token: token, user: user });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: error.message });
@@ -96,6 +96,11 @@ router.get('/users', async (req, res) => {
     console.log(error);
     res.status(500).json({ error: error.message });
   }
+});
+
+router.post('/logout', (req, res) => {
+  // Simply respond to indicate the user has logged out
+  res.status(200).json({ message: 'Logged out successfully' });
 });
 
 module.exports = router;

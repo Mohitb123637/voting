@@ -13,6 +13,11 @@ const candidateSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  profileImage: {
+    type: String,
+    default:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeOlwb6YnVU55H4BNqtLm7T8b7thI-HiQBrg&s',
+  },
   votes: [
     {
       user: {

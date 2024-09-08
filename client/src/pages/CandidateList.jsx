@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 import BackButton from '../components/BackButton';
 
-const Result = () => {
+const CandidateList = () => {
   const dispatch = useDispatch();
   const {
     candidates: candidateList,
@@ -12,6 +12,7 @@ const Result = () => {
     error,
   } = useSelector((state) => state.profile);
 
+  console.log(candidateList);
   useEffect(() => {
     dispatch(candidates());
   }, [dispatch]);
@@ -41,7 +42,7 @@ const Result = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          Election Results
+          Candidates{' '}
         </motion.h1>
 
         {candidateList.length > 0 ? (
@@ -78,39 +79,6 @@ const Result = () => {
                     <span className="font-semibold text-purple-600">Age: </span>
                     {candidate.age}
                   </p>
-
-                  {/* Animated Progress Bar */}
-                  <div className="w-full bg-gray-300 rounded-full h-8 mb-4 overflow-hidden shadow-inner relative">
-                    <motion.div
-                      className="absolute top-0 left-0 bg-gradient-to-r from-purple-400 via-purple-600 to-indigo-600 h-full rounded-full animate-pulse"
-                      style={{
-                        width: `${
-                          (candidate.voteCount /
-                            candidateList.reduce(
-                              (acc, c) => acc + c.voteCount,
-                              0
-                            )) *
-                          100
-                        }%`,
-                      }}
-                      initial={{ width: 0 }}
-                      animate={{
-                        width: `${
-                          (candidate.voteCount /
-                            candidateList.reduce(
-                              (acc, c) => acc + c.voteCount,
-                              0
-                            )) *
-                          100
-                        }%`,
-                      }}
-                      transition={{ duration: 1 }}
-                    />
-                  </div>
-
-                  <p className="text-2xl text-purple-600 font-semibold">
-                    {candidate.voteCount} Votes
-                  </p>
                 </div>
               </motion.div>
             ))}
@@ -126,4 +94,4 @@ const Result = () => {
   );
 };
 
-export default Result;
+export default CandidateList;

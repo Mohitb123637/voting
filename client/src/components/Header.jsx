@@ -1,10 +1,29 @@
 import { Button, Navbar, TextInput } from 'flowbite-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { CiSearch } from 'react-icons/ci';
 import { MdOutlineDarkMode } from 'react-icons/md';
+import { useSelector, useDispatch } from 'react-redux';
+import { logoutUser } from '../../store/auth/authAction';
+import { useState } from 'react';
+import LogOutModal from './LogoutModel';
 
 const Header = () => {
+  const { profile } = useSelector((state) => state.profile);
   const path = useLocation().pathname;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [isModelOpen, setModelOpen] = useState(false);
+  const handleLogout = async () => {
+    try {
+      await dispatch(logoutUser());
+      localStorage.removeItem('token');
+      setModelOpen(false);
+      navigate('/login');
+    } catch (error) {
+      console.log('Logout failed', error);
+    }
+  };
+
   return (
     <Navbar className="border-b-2">
       <Link
@@ -31,9 +50,29 @@ const Header = () => {
         <Button className="w-12 h-10 hidden sm:inline" color="gray" pill>
           <MdOutlineDarkMode />
         </Button>
-        <Link to="/sign-up">
-          <Button gradientDuoTone="purpleToBlue">Sign In</Button>
-        </Link>
+        {profile ? (
+          <>
+            <Button
+              gradientDuoTone="purpleToBlue"
+              onClick={() => setModelOpen(true)}
+            >
+              Logout
+            </Button>
+          </>
+        ) : (
+          <>
+            <Link to="/sign-up">
+              <Button gradientDuoTone="purpleToBlue">Sign In</Button>
+            </Link>
+          </>
+        )}
+
+        <LogOutModal
+          show={isModelOpen}
+          onClose={() => setModelOpen(false)}
+          onLogout={handleLogout}
+        />
+
         <Navbar.Toggle />
       </div>
       <Navbar.Collapse>
@@ -47,26 +86,31 @@ const Header = () => {
         >
           Home
         </Navbar.Link>
+
         <Navbar.Link
-          href="/dashboard"
+          href="/candidateList"
           className={
-            path === '/dashboard'
+            path === '/candidateList'
               ? 'text-indigo-600 dark:text-indigo-400'
               : 'text-gray-700 dark:text-gray-300'
           }
         >
-          Dashboard
+          List of Candidates
         </Navbar.Link>
-        <Navbar.Link
-          href="/result"
-          className={
-            path === '/result'
-              ? 'text-indigo-600 dark:text-indigo-400'
-              : 'text-gray-700 dark:text-gray-300'
-          }
-        >
-          Result
-        </Navbar.Link>
+        {profile?.user.role === 'admin' ? (
+          <>
+            <Navbar.Link
+              href="/dashboard"
+              className={
+                path === '/dashboard'
+                  ? 'text-indigo-600 dark:text-indigo-400'
+                  : 'text-gray-700 dark:text-gray-300'
+              }
+            >
+              Dashboard
+            </Navbar.Link>
+          </>
+        ) : null}
       </Navbar.Collapse>
     </Navbar>
   );

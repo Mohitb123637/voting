@@ -120,6 +120,15 @@ const SignUp = () => {
                 onChange={handleChange}
               />
             </div>
+            <div className="mb-4">
+              <TextInput
+                type="text"
+                id="role"
+                placeholder="Your Role"
+                required
+                onChange={handleChange}
+              />
+            </div>
             <div className="mb-4 relative">
               <TextInput
                 type={showPassword ? 'text' : 'password'}
