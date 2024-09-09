@@ -31,7 +31,7 @@ const Login = () => {
 
   useEffect(() => {
     if (profile) {
-      navigate('/'); // Navigate when profile is ready
+      navigate('/');
     }
   }, [profile, navigate]);
 
@@ -103,9 +103,7 @@ const Login = () => {
                 )}
               </span>
             </div>
-            {error && (
-              <p className="text-red-500 text-sm mb-4">{error}</p> // Error message
-            )}
+            {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
             <Button
               type="submit"
