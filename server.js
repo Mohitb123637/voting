@@ -17,7 +17,6 @@ app.use('/user', userRoutes);
 app.use('/candidate', candidateRoutes);
 
 // this both line of code i am using bcz i am deploying it render
-const __dirname = path.resolve();
 app.use(express.static(path.join(__dirname, '/client/dist/')));
 
 app.get('*', (req, res) => {
