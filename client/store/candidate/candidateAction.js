@@ -15,3 +15,16 @@ export const vote = createAsyncThunk(
     }
   }
 );
+export const deleteCandidate = createAsyncThunk(
+  'candidate/delete',
+  async ({ candidateID }, { rejectWithValue }) => {
+    try {
+      const response = await axiosConfig.delete(`candidate/${candidateID}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue({
+        error: error.response.data ? error.response.data.error : error.message,
+      });
+    }
+  }
+);

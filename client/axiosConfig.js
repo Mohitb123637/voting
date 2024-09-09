@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create an axios instance
 const axiosConfig = axios.create({
-  baseURL: 'http://localhost:3000', // Ensure this is correct based on environment
+  baseURL: 'http://localhost:3000',
 });
 
 // Add a request interceptor to include the token in every request
@@ -21,13 +21,10 @@ axiosConfig.interceptors.request.use(
 
 // Optional: Add a response interceptor to handle expired tokens or unauthorized access
 axiosConfig.interceptors.response.use(
-  (response) => response, // Simply return the response if successful
+  (response) => response,
   (error) => {
-    // Check for 401 Unauthorized response (token expired or invalid)
     if (error.response && error.response.status === 401) {
       console.error('Unauthorized access, token may be expired.');
-      // Optional: You can also redirect the user to the login page here
-      // window.location.href = '/login';
     }
     return Promise.reject(error);
   }

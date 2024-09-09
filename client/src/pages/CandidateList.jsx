@@ -1,10 +1,17 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { candidates } from '../../store/profile/profileAuth';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
+import { MdDelete } from 'react-icons/md';
 import BackButton from '../components/BackButton';
+import Modal from '../components/Model';
+import { deleteCandidate } from '../../store/candidate/candidateAction';
 
 const CandidateList = () => {
+  const { profile } = useSelector((state) => state.profile);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedCandidate, setSelectedCandidate] = useState(null);
+  console.log(profile.user);
   const dispatch = useDispatch();
   const {
     candidates: candidateList,
@@ -12,7 +19,6 @@ const CandidateList = () => {
     error,
   } = useSelector((state) => state.profile);
 
-  console.log(candidateList);
   useEffect(() => {
     dispatch(candidates());
   }, [dispatch]);
@@ -32,6 +38,25 @@ const CandidateList = () => {
       </div>
     );
   }
+
+  const handleVoteClick = (candidate) => {
+    setSelectedCandidate({
+      ...candidate,
+    });
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+  const handleDelete = async () => {
+    if (selectedCandidate) {
+      await dispatch(deleteCandidate({ candidateID: selectedCandidate._id }));
+      await dispatch(candidates());
+    }
+    setShowModal(false);
+  };
 
   return (
     <div className="min-h-screen from-blue-50 via-gray-100 to-blue-50  py-12">
@@ -56,6 +81,14 @@ const CandidateList = () => {
                 transition={{ duration: 0.6 }}
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-200 via-blue-300 to-blue-400 opacity-30 rounded-xl  z-0"></div>
+                {profile?.user.role === 'admin' ? (
+                  <MdDelete
+                    size={30}
+                    className="absolute top-4 right-4 cursor-pointer text-red-500 hover:text-red-700 transition-transform transform hover:scale-125 hover:shadow-lg"
+                    title="Delete Candidate"
+                    onClick={() => handleVoteClick(candidate)}
+                  />
+                ) : null}
 
                 <div className="relative flex flex-col items-center z-10">
                   <motion.img
@@ -89,6 +122,13 @@ const CandidateList = () => {
           </p>
         )}
       </div>
+      <Modal
+        isOpen={showModal}
+        onClose={handleCloseModal}
+        onConfirm={handleDelete}
+        candidate={selectedCandidate}
+        message="Confirm Your Vote"
+      />
       <BackButton />
     </div>
   );

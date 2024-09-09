@@ -111,6 +111,7 @@ const Vote = () => {
           onClose={handleCloseModal}
           onConfirm={handleConfirmVote}
           candidate={selectedCandidate}
+          message="Confirm Your Vote"
         />
       </div>
       <BackButton />

@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import { Link, useNavigate } from 'react-router-dom';
 import { TextInput, Button } from 'flowbite-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../../store/auth/authAction';
@@ -29,6 +29,12 @@ const Login = () => {
     }));
   };
 
+  useEffect(() => {
+    if (profile) {
+      navigate('/'); // Navigate when profile is ready
+    }
+  }, [profile, navigate]);
+
   // After login, store the token
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,9 +46,6 @@ const Login = () => {
         const { token } = resultAction.payload;
         localStorage.setItem('token', token);
         await dispatch(userProfile());
-        if (profile) {
-          navigate('/');
-        }
       } else {
         setError(resultAction.payload.error || 'Login failed');
       }

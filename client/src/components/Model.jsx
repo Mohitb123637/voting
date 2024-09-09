@@ -3,7 +3,7 @@
 
 import { FaTimes } from 'react-icons/fa';
 
-const Modal = ({ isOpen, onClose, onConfirm, candidate }) => {
+const Modal = ({ isOpen, onClose, onConfirm, candidate, message }) => {
   if (!isOpen) return null;
 
   // Fallback image if none is provided
@@ -18,9 +18,7 @@ const Modal = ({ isOpen, onClose, onConfirm, candidate }) => {
         >
           <FaTimes size={24} />
         </button>
-        <h2 className="text-2xl font-bold mb-6 text-gray-900">
-          Confirm Your Vote
-        </h2>
+        <h2 className="text-2xl font-bold mb-6 text-gray-900">{message}</h2>
         <div className="flex items-center mb-6">
           <img
             src={candidate ? candidate.profileImage : fallbackImage}
