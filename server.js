@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const db = require('./db.js');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
@@ -11,8 +12,17 @@ const port = process.env.PORT || 5000;
 
 const userRoutes = require('./routes/userRoutes.js');
 const candidateRoutes = require('./routes/candidateRoute.js');
+
 app.use('/user', userRoutes);
 app.use('/candidate', candidateRoutes);
+
+// this both line of code i am using bcz i am deploying it render
+const __dirname = path.resolve();
+app.use(express.static(path.join(__dirname, '/client/dist/')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
